@@ -3,6 +3,7 @@ package jm.task.core.jdbc.model;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Table
 public class User {
@@ -58,5 +59,14 @@ public class User {
 
     public void setAge(Byte age) {
         this.age = age;
+    }
+
+    @Override
+    public String toString() {
+        return "\n" +  getClass().getSimpleName() + getId()
+                + " (Name: " + getName()
+                + ", LastName: " + getLastName()
+                + ", age: " + age
+                + ")";
     }
 }
