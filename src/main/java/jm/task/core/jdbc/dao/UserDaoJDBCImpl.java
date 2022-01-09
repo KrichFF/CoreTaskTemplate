@@ -11,12 +11,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserDaoJDBCImpl implements UserDao {
+    private Connection conn = null;
+
     public UserDaoJDBCImpl() {
 
     }
 
     public void createUsersTable() {
-        try (Connection conn = Util.getMySQLConnection()) {
+        conn = Util.getMySQLConnection();
+        try {
             Statement statement = conn.createStatement();
             statement.execute("CREATE TABLE if not exists user (" +
                     "  id BIGINT NOT NULL AUTO_INCREMENT," +
@@ -27,40 +30,53 @@ public class UserDaoJDBCImpl implements UserDao {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            Util.disconnect(conn);
         }
     }
 
     public void dropUsersTable() {
-        try (Connection conn = Util.getMySQLConnection()) {
+        conn = Util.getMySQLConnection();
+        try {
             Statement statement = conn.createStatement();
             statement.execute("DROP TABLE if exists user");
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            Util.disconnect(conn);
         }
+
     }
 
     public void saveUser(String name, String lastName, byte age) {
-        try (Connection conn = Util.getMySQLConnection()) {
+        conn = Util.getMySQLConnection();
+        try {
             Statement statement = conn.createStatement();
             statement.executeUpdate("INSERT user (FirstName, LastName, age) " +
                     "VALUES ('" + name + "', '" + lastName + "', " + age + ")");
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            Util.disconnect(conn);
         }
     }
 
     public void removeUserById(long id) {
-        try (Connection conn = Util.getMySQLConnection()) {
+        conn = Util.getMySQLConnection();
+        try {
             Statement statement = conn.createStatement();
             statement.executeUpdate("DELETE FROM user where id = '" + id + "'");
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            Util.disconnect(conn);
         }
     }
 
     public List<User> getAllUsers() {
+        conn = Util.getMySQLConnection();
         List<User> list = new ArrayList<>();
-        try (Connection conn = Util.getMySQLConnection()) {
+        try {
             Statement statement = conn.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * from user");
             while (resultSet.next()){
@@ -74,15 +90,21 @@ public class UserDaoJDBCImpl implements UserDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        finally {
+            Util.disconnect(conn);
+        }
         return list;
     }
 
     public void cleanUsersTable() {
-        try (Connection conn = Util.getMySQLConnection()) {
+        conn = Util.getMySQLConnection();
+        try {
             Statement statement = conn.createStatement();
             statement.executeUpdate("TRUNCATE TABLE  user;");
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            Util.disconnect(conn);
         }
     }
 }

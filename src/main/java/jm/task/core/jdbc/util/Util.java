@@ -6,8 +6,21 @@ import java.sql.SQLException;
 
 public class Util {
 
-    public static Connection getMySQLConnection() throws SQLException {
+    public static Connection getMySQLConnection() {
         String connectionURL = "jdbc:mysql://localhost:3306/pp";
-        return DriverManager.getConnection(connectionURL, "root", "1234");
+        Connection connection = null;
+        try{
+            connection = DriverManager.getConnection(connectionURL, "root", "1234");
+        }catch (SQLException e){
+            System.out.println("Открылось");
+        }
+        return connection;
+    }
+    public static void disconnect(Connection connection){
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            System.out.println("Не закрылось");
+        }
     }
 }
